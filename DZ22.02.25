@@ -1,1 +1,42 @@
+import pymorphy2
 
+# Инициализация анализатора
+morph = pymorphy2.MorphAnalyzer()
+
+# Пример текста
+text = "Мама мыла раму, а потом пошла гулять."
+
+# Лемматизация
+lemmatized_text = [morph.parse(word)[0].normal_form for word in text.split()]
+print("Лемматизация:", lemmatized_text)
+
+# Стемминг (в pymorphy2 стемминг не поддерживается напрямую, но можно использовать нормальную форму)
+stemmed_text = [morph.parse(word)[0].normal_form for word in text.split()]
+print("Стемминг:", stemmed_text)
+
+def tokenize_ascii(text):
+    return list(text)
+
+# Пример использования
+ascii_text = "Hello, World!"
+tokens = tokenize_ascii(ascii_text)
+print("Токенизация ASCII:", tokens)
+
+def vectorize_ascii(text):
+    return [ord(char) for char in text]
+
+# Пример использования
+ascii_text = "Hello, World!"
+vectors = vectorize_ascii(ascii_text)
+print("Векторизация ASCII:", vectors)
+
+# Лемматизация и стемминг текста
+processed_text = ' '.join(lemmatized_text)
+
+# Токенизация
+tokens = tokenize_ascii(processed_text)
+print("Токенизация после обработки:", tokens)
+
+# Векторизация
+vectors = vectorize_ascii(processed_text)
+print("Векторизация после обработки:", vectors)
