@@ -1,14 +1,23 @@
-!pip install natasha
-
 # Импорт необходимых библиотек
-from natasha import MorphVocab, Doc
+from natasha import MorphVocab, Doc, Segmenter, NewsEmbedding, NewsMorphTagger
+
+# Инициализация сегментатора, морфологического теггера и морфологического словаря
+segmenter = Segmenter()
+morph_vocab = MorphVocab()
+
+# Загрузка модели для морфологического анализа
+emb = NewsEmbedding()
+morph_tagger = NewsMorphTagger(emb)
 
 # 1. Лемматизация и стемминг с использованием Natasha
 def lemmatize_and_stem(text):
-    morph_vocab = MorphVocab()
     doc = Doc(text)
-    doc.segment(morph_vocab)
-    doc.tag_morph(morph_vocab)
+    doc.segment(segmenter)  # Сегментация текста на токены
+    doc.tag_morph(morph_tagger)  # Морфологический разбор
+    
+    # Приведение токенов к леммам
+    for token in doc.tokens:
+        token.lemmatize(morph_vocab)
     
     lemmatized_text = [token.lemma for token in doc.tokens]
     stemmed_text = [token.lemma for token in doc.tokens]  # В Natasha стемминг не поддерживается напрямую, используем леммы
