@@ -1,19 +1,29 @@
-import pymorphy2
+!pip install natasha
 
-# Инициализация анализатора
-morph = pymorphy2.MorphAnalyzer()
+# Импорт необходимых библиотек
+from natasha import MorphVocab, Doc
+
+# 1. Лемматизация и стемминг с использованием Natasha
+def lemmatize_and_stem(text):
+    morph_vocab = MorphVocab()
+    doc = Doc(text)
+    doc.segment(morph_vocab)
+    doc.tag_morph(morph_vocab)
+    
+    lemmatized_text = [token.lemma for token in doc.tokens]
+    stemmed_text = [token.lemma for token in doc.tokens]  # В Natasha стемминг не поддерживается напрямую, используем леммы
+    
+    return lemmatized_text, stemmed_text
 
 # Пример текста
 text = "Мама мыла раму, а потом пошла гулять."
 
-# Лемматизация
-lemmatized_text = [morph.parse(word)[0].normal_form for word in text.split()]
+# Лемматизация и стемминг
+lemmatized_text, stemmed_text = lemmatize_and_stem(text)
 print("Лемматизация:", lemmatized_text)
-
-# Стемминг (в pymorphy2 стемминг не поддерживается напрямую, но можно использовать нормальную форму)
-stemmed_text = [morph.parse(word)[0].normal_form for word in text.split()]
 print("Стемминг:", stemmed_text)
 
+# 2. Функция для токенизации всех символов из ASCII
 def tokenize_ascii(text):
     return list(text)
 
@@ -22,6 +32,7 @@ ascii_text = "Hello, World!"
 tokens = tokenize_ascii(ascii_text)
 print("Токенизация ASCII:", tokens)
 
+# 3. Функция для векторизации всех символов из ASCII
 def vectorize_ascii(text):
     return [ord(char) for char in text]
 
@@ -30,7 +41,7 @@ ascii_text = "Hello, World!"
 vectors = vectorize_ascii(ascii_text)
 print("Векторизация ASCII:", vectors)
 
-# Лемматизация и стемминг текста
+# 4. Токенизация и векторизация текста после лемматизации и стемминга
 processed_text = ' '.join(lemmatized_text)
 
 # Токенизация
